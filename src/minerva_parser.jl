@@ -2,17 +2,17 @@
 using Debug
 
 include("minerva_scanner.jl")
-include("minerva_type_assignment_grammar.jl")
-include("minerva_transcribes_grammar.jl")
-include("minerva_translates_grammar.jl")
-include("minerva_repression_grammar.jl")
-include("minerva_inhibits_grammar.jl")
-include("minerva_activates_grammar.jl")
-include("minerva_gene_symbol_assignment_grammar.jl")
-include("minerva_phosphorylates_grammar.jl")
-include("minerva_dephosphorylates_grammar.jl")
-include("minerva_complex_grammar.jl")
-include("minerva_catalyzes_grammar.jl")
+include("./grammar/minerva_type_assignment_grammar.jl")
+include("./grammar/minerva_transcribes_grammar.jl")
+include("./grammar/minerva_translates_grammar.jl")
+include("./grammar/minerva_repression_grammar.jl")
+include("./grammar/minerva_inhibits_grammar.jl")
+include("./grammar/minerva_activates_grammar.jl")
+include("./grammar/minerva_gene_symbol_assignment_grammar.jl")
+include("./grammar/minerva_phosphorylates_grammar.jl")
+include("./grammar/minerva_dephosphorylates_grammar.jl")
+include("./grammar/minerva_complex_grammar.jl")
+include("./grammar/minerva_catalyzes_grammar.jl")
 
 type MinervaParserError
   error_message::String
@@ -91,7 +91,7 @@ function parse_token_array(sentence_vector::Array{MinervaSentence,1})
     elseif (_is_type_statement(sentence,PHOSPHORYLATES))
 
       @show sentence
-      
+
     elseif (_is_type_statement(sentence,DEPHOSPHORYLATES))
 
       @show sentence
