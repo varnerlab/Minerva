@@ -1,0 +1,25 @@
+// Bacillus subtullis carbon catabolite repression test model
+// Author: J. Varner
+// School of Chemical Engineering,
+// Purdue University, West Lafayette IN 47907
+// Version: 1.0
+
+// Types -
+g_ are types of GENE_SYMBOLS;
+mRNA_ are types of mRNA_SYMBOLS;
+p_ are types of PROTEIN_SYMBOLS;
+m_ are types of METABOLITE_SYMBOLS;
+
+// What genes do we have in the model?
+(g_xynP,g_xynB,g_xylA,g_xylB,g_xylR,g_ccpA,g_Hpr,g_HprK,g_eI,g_eIIA,g_eIIB and g_IIC) = GENE_SYMBOLS;
+
+// General gene expression and translation
+RNAP transcribes my GENE_SYMBOLS;
+RIBOSOME translates my mRNA_SYMBOLS;
+
+// Transcriptional control mechanisms -
+(p_xylR|p_ccpA_pHpr-S46) represses the expression of (g_xynP,g_xynB,g_xylA,g_xylB);
+
+// Allosteric regulation mechanism -
+m_xylose inhibits (p_xylR or p_dfsT);
+m_g6P activates p_xylR;
