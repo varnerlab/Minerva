@@ -83,7 +83,6 @@ end
 type SEMICOLON <: AbstractTokenType
 end
 
-
 type REPRESSES <: AbstractTokenType
 end
 
@@ -93,6 +92,20 @@ end
 type INHIBITS <: AbstractTokenType
 end
 
+type PHOSPHORYLATES <: AbstractTokenType
+end
+
+type DEPHOSPHORYLATES <: AbstractTokenType
+end
+
+type COMPLEX <: AbstractTokenType
+end
+
+type FORM <: AbstractTokenType
+end
+
+type AT <: AbstractTokenType
+end
 
 type BIOLOGICAL_SYMBOL <: AbstractTokenType
 end
@@ -252,7 +265,7 @@ function scan_model_statements(model_statement_vector::Array{String,1})
   token_type_dictionary[string(hash("to"))] = MinervaToken("to",TO())
   token_type_dictionary[string(hash("reversible_to"))] = MinervaToken("reversible_to",RTO())
   token_type_dictionary[string(hash("->"))] = MinervaToken("to",TO())
-  oken_type_dictionary[string(hash("<->"))] = MinervaToken("reversible_to",RTO())
+  token_type_dictionary[string(hash("<->"))] = MinervaToken("reversible_to",RTO())
   token_type_dictionary[string(hash("are"))] = MinervaToken("are",ARE())
   token_type_dictionary[string(hash("="))] = MinervaToken("=",ARE())
   token_type_dictionary[string(hash("is"))] = MinervaToken("is",IS())
@@ -260,7 +273,6 @@ function scan_model_statements(model_statement_vector::Array{String,1})
   token_type_dictionary[string(hash("model"))] = MinervaToken("model",MODEL())
   token_type_dictionary[string(hash("catalyzes"))] = MinervaToken("catalyze",CATALYZE())
   token_type_dictionary[string(hash("catalyzed"))] = MinervaToken("catalyze",CATALYZE())
-  token_type_dictionary[string(hash("catalyze"))] = MinervaToken("catalyze",CATALYZE())
   token_type_dictionary[string(hash("GENE_SYMBOLS"))] = MinervaToken("GENE_SYMBOL",GENE_SYMBOL())
   token_type_dictionary[string(hash("mRNA_SYMBOLS"))] = MinervaToken("mRNA_SYMBOL",mRNA_SYMBOL())
   token_type_dictionary[string(hash("PROTEIN_SYMBOLS"))] = MinervaToken("PROTEIN_SYMBOL",PROTEIN_SYMBOL())
@@ -273,6 +285,11 @@ function scan_model_statements(model_statement_vector::Array{String,1})
   token_type_dictionary[string(hash("activates"))] = MinervaToken("activates",ACTIVATES())
   token_type_dictionary[string(hash("my"))] = MinervaToken("my",MY())
   token_type_dictionary[string(hash("all"))] = MinervaToken("all",ALL())
+  token_type_dictionary[string(hash("phosphorylates"))] = MinervaToken("phosphorylates",PHOSPHORYLATES())
+  token_type_dictionary[string(hash("dephosphorylates"))] = MinervaToken("dephosphorylates",DEPHOSPHORYLATES())
+  token_type_dictionary[string(hash("form"))] = MinervaToken("form",FORM())
+  token_type_dictionary[string(hash("complex"))] = MinervaToken("complex",COMPLEX())
+  token_type_dictionary[string(hash("at"))] = MinervaToken("at",AT())
 
   try
 
@@ -283,14 +300,14 @@ function scan_model_statements(model_statement_vector::Array{String,1})
       local_statement = pop!(model_statement_vector)
 
       # Crazy chars?
-      if (isempty(search(local_statement,r"[<>\%\&\#\@\!]")) == false)
+      if (isempty(search(local_statement,r"[\%\&\#\@\!]")) == false)
 
         # what column number?
-        column_number = search(local_statement,r"[<>\%\&\#\@\!]")
+        column_number = search(local_statement,r"[\%\&\#\@\!]")
 
         # ok, we have an error (funky char)
         error_message = "ERROR: Invalid character in statement \""*local_statement*"\" at line_mumber: "*string(line_counter)*" and column_number: "*string(column_number[1])
-        error_object = MinervaError(error_message,line_counter,column_number)
+        error_object = MinervaScannerError(error_message,line_counter,column_number)
 
         # add this to the error vector -
         push!(error_vector,error_object)

@@ -9,6 +9,10 @@ include("minerva_repression_grammar.jl")
 include("minerva_inhibits_grammar.jl")
 include("minerva_activates_grammar.jl")
 include("minerva_gene_symbol_assignment_grammar.jl")
+include("minerva_phosphorylates_grammar.jl")
+include("minerva_dephosphorylates_grammar.jl")
+include("minerva_complex_grammar.jl")
+include("minerva_catalyzes_grammar.jl")
 
 type MinervaParserError
   error_message::String
@@ -84,10 +88,23 @@ function parse_token_array(sentence_vector::Array{MinervaSentence,1})
         push!(error_vector,parser_error)
       end
 
-    else
+    elseif (_is_type_statement(sentence,PHOSPHORYLATES))
+
+      @show sentence
+      
+    elseif (_is_type_statement(sentence,DEPHOSPHORYLATES))
 
       @show sentence
 
+    elseif (_is_type_statement(sentence,CATALYZE))
+
+      @show sentence
+
+    elseif (_is_type_statement(sentence,COMPLEX) && _is_type_statement(sentence,FORM))
+
+      @show sentence
+
+    else
       # ok ... we have done everything else ...
       # we have a gene symbol assignment statement
       parser_error = _parse_minerva_gene_symbol_assignment_sentence(reverse(sentence.sentence))
