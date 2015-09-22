@@ -41,6 +41,12 @@ end
 type IS <: AbstractTokenType
 end
 
+type TO <: AbstractTokenType
+end
+
+type RTO <: AbstractTokenType
+end
+
 type MY <: AbstractTokenType
 end
 
@@ -243,6 +249,10 @@ function scan_model_statements(model_statement_vector::Array{String,1})
   token_type_dictionary[string(hash("and"))] = MinervaToken("and",AND())
   token_type_dictionary[string(hash("|"))] = MinervaToken("|",OR())
   token_type_dictionary[string(hash("or"))] = MinervaToken("or",OR())
+  token_type_dictionary[string(hash("to"))] = MinervaToken("to",TO())
+  token_type_dictionary[string(hash("reversible_to"))] = MinervaToken("reversible_to",RTO())
+  token_type_dictionary[string(hash("->"))] = MinervaToken("to",TO())
+  oken_type_dictionary[string(hash("<->"))] = MinervaToken("reversible_to",RTO())
   token_type_dictionary[string(hash("are"))] = MinervaToken("are",ARE())
   token_type_dictionary[string(hash("="))] = MinervaToken("=",ARE())
   token_type_dictionary[string(hash("is"))] = MinervaToken("is",IS())

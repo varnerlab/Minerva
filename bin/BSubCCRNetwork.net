@@ -23,3 +23,9 @@ RIBOSOME translates my mRNA_SYMBOLS;
 // Allosteric regulation mechanism -
 m_xylose inhibits (p_xylR or p_dfsT);
 m_g6P activates p_xylR;
+
+// Metabolic reactions -
+p_HprK phosphorylates p_Hpr at S46;
+p_HprK dephosphorylates p_Hpr at S46;
+(p_ccpA,pHpr-S46) form a complex p_ccpA_pHpr-S46;
+p_xynP catalyzes a_xt to a_ic;
