@@ -90,19 +90,19 @@ function parse_token_array(sentence_vector::Array{MinervaSentence,1})
 
     elseif (_is_type_statement(sentence,PHOSPHORYLATES))
 
-      @show sentence
+      #@show sentence
 
     elseif (_is_type_statement(sentence,DEPHOSPHORYLATES))
 
-      @show sentence
+      #@show sentence
 
     elseif (_is_type_statement(sentence,CATALYZE))
 
-      @show sentence
+      #@show sentence
 
     elseif (_is_type_statement(sentence,COMPLEX) && _is_type_statement(sentence,FORM))
 
-      @show sentence
+      #@show sentence
 
     else
       # ok ... we have done everything else ...
