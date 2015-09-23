@@ -11,6 +11,7 @@ function build_ast_from_sentence_array(sentence_vector::Array{MinervaSentence,1}
 
   # function declarations -
   model_ast = XMLDocument()
+  root = create_root(model_ast, "model_ast")
 
   # parse -
   while !isempty(sentence_vector)
