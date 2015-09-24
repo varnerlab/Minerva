@@ -22,6 +22,9 @@ function build_ast_from_sentence_array(sentence_vector::Array{MinervaSentence,1}
   list_of_species = new_child(root,"list_of_species")
   list_of_transcription_rates = new_child(root,"list_of_transcription_rates")
   list_of_translation_rates = new_child(root,"list_of_translation_rates")
+  allosteric_control = new_child(root,"allosteric_control")
+  transcriptional_control = new_child(root,"transcriptional_control")
+
   user_ribosome_symbol = nothing
   user_rna_polymerase_symbol = nothing
 
@@ -60,9 +63,23 @@ function build_ast_from_sentence_array(sentence_vector::Array{MinervaSentence,1}
       sentence_value = sentence.sentence
       user_ribosome_symbol = sentence_value[1].token_lexeme
 
-    elseif (_is_type_statement(sentence,REPRESSES))
-    elseif (_is_type_statement(sentence,INHIBITS))
+    elseif (_is_type_statement(sentence,REPRESSES) && _is_type_statement(sentence,TRANSCRIPTION))
+
+      # We have a transcriptional repression statement -
+      effector_array = XMLElement[]
+      sentence_value = reverse(sentence.sentence)
+      _recursive_extract_effector_symbols(sentence_value,effector_array)
+
+        @show effector_array
+
     elseif (_is_type_statement(sentence,ACTIVATES))
+    elseif (_is_type_statement(sentence,INHIBITS))
+
+
+
+
+
+
     elseif (_is_type_statement(sentence,PHOSPHORYLATES))
     elseif (_is_type_statement(sentence,DEPHOSPHORYLATES))
     elseif (_is_type_statement(sentence,CATALYZE))
@@ -176,6 +193,34 @@ function _add_transcription_rate_nodes_to_tree(gene_node::XMLElement,parent::XML
   species_reference_node = new_child(transcription_rate_node,"species_reference")
   set_attribute(species_reference_node, "symbol",gene_symbol)
 
+end
+
+function _recursive_extract_effector_symbols(sentence::Array{MinervaToken,1},effector_array::Array{XMLElement,1})
+
+  # Grab the token -
+  next_token = pop!(sentence)
+  if (isa(next_token.token_type,LPAREN))
+    _recursive_extract_effector_symbols(sentence,effector_array)
+  elseif (isa(next_token.token_type,RPAREN))
+     _recursive_extract_effector_symbols(sentence,effector_array)
+  elseif (isa(next_token.token_type,BIOLOGICAL_SYMBOL))
+
+    # Build the species_reference_node -
+    species_reference_node = new_element("species_reference")
+    set_attribute(species_reference_node, "symbol",next_token.token_lexeme)
+    push!(effector_array,species_reference_node)
+
+    # Go down again ...
+    _recursive_extract_effector_symbols(sentence,effector_array)
+
+  elseif (isa(next_token.token_type,AND) || isa(next_token.token_type,OR))
+
+    # Go down again ...
+    _recursive_extract_effector_symbols(sentence,effector_array)
+
+  elseif (isa(next_token.token_type,REPRESSES))
+    return nothing
+  end
 end
 
 function _recursive_extract_genetic_symbols(sentence::Array{MinervaToken,1},parent::XMLElement)
